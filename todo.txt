@@ -1,50 +1,88 @@
 ******************************************************** NEXT PATCH **************************************************
 
-pilot wave effect rework
-  it's easier to surf on blocks controlled by pilot wave
-    pilot wave secret combo spawns blocks that are easier to surf on: long and thin
-  pilot wave location resets to player when off
-  pilot wave hitting map no longer shrinks, it just will not enter map
-  field speed slows down with total block mass in field
-  energy drain
-    1x energy regen disabled when field is active
-    2x passive regen drained when out of line of sight of player
-    energy drain that scales with size and acceleration of blocks in field
-  added graphical flicker when field is out of line of sight
-  a few more bosses now interact with blocks and can take damage
-  prevented field from disabling when mouse goes off screen
-    I don't expect any bugs from this, but maybe...
+standing wave field tech: superposition -  if you have above 200 energy, 0.1x damage taken
 
-ghoster mobs have 2x->1.5x extra density and health
-exploder mobs no longer have a chance for a shield
-  2.5x explode damage, 1.3x health
-  added a red aura to show they explode on contact
-spawnerBossCulture changed visual look to be a flashing transparent red outline
-  2x explode damage
-laser mobs no longer explode, 1.5x density/mass
+updated some harpoon gun images
 
+1st ionization energy 14->15 energy per heal
+increase block pick up range by 30
+plasma jet applies to plasma ball, and makes it bigger
+spore gun shows path prediction when crouched
+futures exchange 6->7 duplication per cancel
+residual dipolar coupling 8->10 coupling per cancel
+commodities exchange (8-12)->(10-14) power ups per cancel
+
+
+grappling hook
+  accelerates faster
+  initial launch gains player velocity
+    makes aiming easier while moving
+  grapple has a slightly shorter cooldown after hitting mobs
+
+bugs
+  fixed soft lock on training level - grenades
 
 ******************************************************** BUGS ********************************************************
 
-player can become crouched while not touching the ground if they exit the ground while crouched
+graphical bug - player can become crouched while not touching the ground if they exit the ground while crouched
 
 *********************************************************** TODO *****************************************************
 
-tech - while player is in field increase field radius and no energy drain
-  check if player is inside field
-    m.fieldUpgrades[8].collider.isPLayerInField = false
-    fix   tech.isSurfing && m.fieldUpgrades[8].collider.isPLayerInField
-
-tech - get a benefit while surfing on a block inside the pilot wave field
-  defense?  damage?
-tech - benefit if you haven't killed any mobs on this level
-tech - benefit in the first 20 seconds of the level
-
-plasma globe - it should not explode on map contact, but instead shrink?
-  only explode on mouse release
-
-mob - moves around, but then stops and makes porcupine spikes for 2 seconds, then moves again.
+!!!mob: spiker - moves around, but then stops and makes porcupine spikes for 2 seconds, then moves again.
   maybe use hopper movement?
+  maybe use slasher laser code
+
+make guns do different things if  tap or hold fire
+  effects have some overlap with crouch
+  guns
+    wave: amplitude difference, single wave/double wave
+    nail gun:  one large bullet, faster
+    laser: wide beam
+    super balls: ball velocity
+    foam: speed, size
+    harpoon: retract early?
+  like incendiary, but only active on tap and release
+    bigger explosions to balance?
+
+tech - if you haven't fired a bullet in 4 seconds your next bullet is bigger?
+  effect?
+    size: nail gun,shotgun,super balls,drones,foam,harpoon
+    spores,mine: number of projectiles
+    wave?
+    explosion size: missiles,grenades
+    laser?
+  code?
+    ephemera?  This doesn't sync to the bullet fired, it would have to be a additional projectiles
+    custom to each gun?
+
+option for numerical HUD
+  dmg, energy, health, defense
+
+hold jump to jump higher
+  field tech?  or skin tech?
+    maybe require nitinol first?
+
+increase interest percent, but make it focused on one type:
+  this lets the player make more strategic choices
+  research, coupling, ammo?
+
+wormhole fieldtech:   - gain 1% duplication for this level each time the wormhole eats a block
+  add a limit to the number of blocks that can be duplicated?
+  can this be exploited to not be fun?
+  how many blocks are on an average level?
+
+tech - rip in spacetime - using wormhole leaves behind a zone of radiation, like neutron bomb  ( grenadeNeutron )
+  make a new bullet type for rip() in spacetime so you can use it for several things
+  rips()
+    lasts 2-10 seconds?
+    damages mobs and player
+    slows things caught inside?
+    black circle with randomly changing radius and sparkles inside the black circle
+      white stroke (maybe with dotted lines like laser)
+
+tech - benefit if you haven't killed any mobs on this level
+  have to clean up mobs that die on level spawn from falling blocks 
+tech - benefit in the first 20 seconds of the level
 
 soft body boss?
   search    softBody(x, y, angle = 0, isAttached = true, len = 15, radius = 20, stiffness = 1, damping = 1) {
@@ -1177,7 +1215,6 @@ if pause is pressed while selecting power ups, display pause menu on top of sele
   time dilation - graphic of a hyperbolic equation Luminogram
   negative mass - Blacklight painting by Moebius
   plasma torch - by Dan Mumford
-
   metamaterial cloaking - Scientific photography by Miki Asai,   by Bruce Munro
   molecular assembler - by Laurie Greasley 16-bit Isometric 
   wormhole - by Tim White
@@ -1190,7 +1227,7 @@ if pause is pressed while selecting power ups, display pause menu on top of sele
   drones - insect quadcopter tilt-shift photography
   super balls - By Akari Toriyama
   wave - sound wave oscilloscope by Paul Catherall,   concentric circles by Paul Catherall 
-    Barbara Takenaga's painting depicting a clean sound wave on aoscilloscope device --ar 3:2 --v 5
+    Barbara Takenaga's painting depicting a clean sound wave on oscilloscope device --ar 3:2 --v 5
   foam - black blobs Ink doodle
   harpoon - iron harpoon on a rope weapon art white background by Eiichiro Oda --no fish --ar 3:2 --v 5 --s 750
   mine - by Dan McPharlin
@@ -1240,14 +1277,13 @@ possible names for tech
   SQUID (for superconducting quantum interference device) is a very sensitive magnetometer used to measure extremely subtle magnetic fields, based on superconducting loops containing Josephson junctions.
   Josephson junction - superconducting junction used in SQUIDS and quantum computers
   nuclear pasta - hard matter in neutron star
-  nonlocal, nonlocality:  maybe use for pilot wave 
+  spaghettification
   fine-tuned universe
   nonperturbative
   D-branes
   instanton or pseudoparticle
   soliton  (wave packet)
   hall effect thrusters
-  spaghettification
   particle accelerator
   superluminal signalling
   NP-complete
@@ -1279,7 +1315,6 @@ possible names for tech
   Casimir effect - attractive force between two close conductive plates
   difference engine - early calculator/computer
   cyanoacrylate - superglue use for a slowing effect?
-  superposition - something with waves overlapping
   math terms - integral, derivative, Laplace transform, inflection point
   quasicrystals - something with low friction, maybe defense?
   Coalescence - things merging together like clouds.  maybe mergin power ups?
@@ -1297,6 +1332,7 @@ possible names for tech
   Quintessence - related to dark energy
   biofilm - something defensive?  related to spores?
   Thermogalvanic - makes things cold, for no energy
+  Intron - noncoding DNA that separates regions of coding DNA,  use for JUNK tech
 
 ******************************************************* DESIGN ******************************************************
 

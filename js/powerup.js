@@ -286,13 +286,13 @@ const powerUps = {
     endDraft(type, isCanceled = false) { //type should be a gun, tech, or field
         if (isCanceled) {
             if (tech.isCancelDuplication) {
-                const value = 0.06
+                const value = 0.07
                 tech.duplication += value
                 simulation.inGameConsole(`tech.duplicationChance() <span class='color-symbol'>+=</span> ${value}`)
                 simulation.circleFlare(value);
             }
             if (tech.isCancelRerolls) {
-                for (let i = 0, len = 8 + 4 * Math.random(); i < len; i++) {
+                for (let i = 0, len = 10 + 6 * Math.random(); i < len; i++) {
                     let spawnType
                     if (Math.random() < 0.4) {
                         spawnType = "ammo"
@@ -304,7 +304,7 @@ const powerUps = {
                     powerUps.spawn(m.pos.x + 40 * (Math.random() - 0.5), m.pos.y + 40 * (Math.random() - 0.5), spawnType, false);
                 }
             }
-            if (tech.isCancelCouple) powerUps.spawnDelay("coupling", 8)
+            if (tech.isCancelCouple) powerUps.spawnDelay("coupling", 10)
             if (tech.isCancelTech && tech.cancelTechCount === 0 && type !== "entanglement") {
                 tech.cancelTechCount++
                 // powerUps.research.use('tech')
@@ -862,7 +862,7 @@ const powerUps = {
                 }
             }
             if (powerUps.healGiveMaxEnergy) {
-                tech.healMaxEnergyBonus += 0.14 * tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1)
+                tech.healMaxEnergyBonus += 0.15 * tech.largerHeals * (tech.isHalfHeals ? 0.5 : 1)
                 m.setMaxEnergy();
             }
         },
@@ -1138,7 +1138,7 @@ const powerUps = {
                 }
                 // console.log(options.length)
                 if (options.length > 0 || !tech.isSuperDeterminism) {
-                    let totalChoices = 2 + tech.extraChoices + 3 * (m.fieldMode === 8) - level.fewerChoices
+                    let totalChoices = 2 + tech.extraChoices + (tech.isInPilot ? 1 : 3) * (m.fieldMode === 8) - level.fewerChoices
                     if (tech.isCancelTech && tech.cancelTechCount === 1) {
                         totalChoices *= 3
                         tech.cancelTechCount++
@@ -1205,7 +1205,7 @@ const powerUps = {
                 for (let i = 1; i < m.fieldUpgrades.length; i++) { //skip field emitter
                     if (i !== m.fieldMode) options.push(i);
                 }
-                let totalChoices = 2 + tech.extraChoices + 3 * (m.fieldMode === 8) - level.fewerChoices
+                let totalChoices = 2 + tech.extraChoices + (tech.isInPilot ? 1 : 3) * (m.fieldMode === 8) - level.fewerChoices
                 if (tech.isCancelTech && tech.cancelTechCount === 1) {
                     totalChoices *= 3
                     tech.cancelTechCount++
@@ -1285,7 +1285,7 @@ const powerUps = {
                     }
                 }
                 //set total choices
-                let totalChoices = 3 + tech.extraChoices + 3 * (m.fieldMode === 8) - level.fewerChoices
+                let totalChoices = 3 + tech.extraChoices + (tech.isInPilot ? 1 : 3) * (m.fieldMode === 8) - level.fewerChoices
                 if (tech.isCancelTech && tech.cancelTechCount === 1) {
                     totalChoices *= 3
                     tech.cancelTechCount++
@@ -1761,7 +1761,6 @@ const powerUps = {
             }
         }
 
-
         if (smallIndexes.length > 2 && Math.random() < 0.66) {             // console.log("no big, at least 3 small can combine")
             for (let j = 0; j < 3; j++) {
                 for (let i = 0; i < powerUp.length; i++) {
@@ -1773,7 +1772,7 @@ const powerUps = {
                 }
             }
 
-            options = ["tech", "gun", "field"]
+            options = ["tech", "tech", "tech", "gun", "gun", "field"]
             powerUps.directSpawn(where.x, where.y, options[Math.floor(Math.random() * options.length)], false)
         } else if (bigIndexes.length > 0 && Math.random() < 0.5) { // console.log("at least 1 big can spilt")
             const index = bigIndexes[Math.floor(Math.random() * bigIndexes.length)]

@@ -18,6 +18,7 @@ const level = {
         if (level.levelsCleared === 0) { //this code only runs on the first level
             // simulation.enableConstructMode() //tech.giveTech('motion sickness')  //used to build maps in testing mode
             // simulation.difficultyMode = 1
+            // build.isExperimentRun = true
 
             // simulation.isHorizontalFlipped = true
             // spawn.setSpawnList(); //picks a couple mobs types for a themed random mob spawns
@@ -33,16 +34,8 @@ const level = {
             // tech.tech[297].frequency = 100
             // tech.addJunkTechToPool(0.5)
             // m.couplingChange(10)
-            // m.setField("pilot wave") //1 standing wave  2 perfect diamagnetism  3 negative mass  4 molecular assembler  5 plasma torch  6 time dilation  7 metamaterial cloaking  8 pilot wave  9 wormhole 10 grappling hook
-
-            // spawn.bodyRect(625, -100, 100, 75);
-            // spawn.bodyRect(750, -125, 250, 100);
-            // spawn.bodyRect(500, -150, 75, 100);
-            // spawn.bodyRect(1150, -125, 225, 75);
-            // spawn.bodyRect(1425, -250, 25, 150);
-            // spawn.bodyRect(1525, -100, 75, 25);
-            // spawn.bodyRect(1550, -200, 150, 100);
-
+            // m.setField(5) //1 standing wave  2 perfect diamagnetism  3 negative mass  4 molecular assembler  5 plasma torch  6 time dilation  7 metamaterial cloaking  8 pilot wave  9 wormhole 10 grappling hook
+            // m.energy = 0
 
             // m.energy = 0
             // powerUps.research.count = 3
@@ -51,19 +44,19 @@ const level = {
             // simulation.molecularMode = 2
             // m.damage(0.1);
             // b.giveGuns("nail gun") //0 nail gun  1 shotgun  2 super balls 3 wave 4 missiles 5 grenades  6 spores  7 drones  8 foam  9 harpoon  10 mine  11 laser
-            // b.giveGuns("harpoon") //0 nail gun  1 shotgun  2 super balls 3 wave 4 missiles 5 grenades  6 spores  7 drones  8 foam  9 harpoon  10 mine  11 laser
+            // b.giveGuns("spores") //0 nail gun  1 shotgun  2 super balls 3 wave 4 missiles 5 grenades  6 spores  7 drones  8 foam  9 harpoon  10 mine  11 laser
             // b.giveGuns("laser") //0 nail gun  1 shotgun  2 super balls 3 wave 4 missiles 5 grenades  6 spores  7 drones  8 foam  9 harpoon  10 mine  11 laser
             // tech.laserColor = "#fff"
             // tech.laserColorAlpha = "rgba(255, 255, 255, 0.5)"
 
             // b.guns[8].ammo = 100000000
             // requestAnimationFrame(() => { tech.giveTech("non-renewables") });
-            // tech.giveTech("dark matter")
+            // tech.giveTech("cyclotron")
             // tech.addJunkTechToPool(0.5)
-            // for (let i = 0; i < 1; ++i) tech.giveTech("paradigm shift")
-            // for (let i = 0; i < 1; ++i) tech.giveTech("Higgs mechanism")
+            // for (let i = 0; i < 3; ++i) tech.giveTech("plasma jet")
+            // for (let i = 0; i < 1; ++i) tech.giveTech("plasma ball")
             // m.skin.egg();
-            // for (let i = 0; i < 1; ++i) tech.giveTech("many-worlds")
+            // for (let i = 0; i < 1; ++i) tech.giveTech("dielectric")
             // requestAnimationFrame(() => { for (let i = 0; i < 1; i++) tech.giveTech("surfing") });
             // requestAnimationFrame(() => { for (let i = 0; i < 1; i++) tech.giveTech("interest") });
             // for (let i = 0; i < 1; i++) tech.giveTech("interest")
@@ -77,7 +70,7 @@ const level = {
             level[simulation.isTraining ? "walk" : "initial"]() //normal starting level **************************************************
 
 
-            // for (let i = 0; i < 10; ++i) spawn.exploder(1900, -500)
+            // for (let i = 0; i < 1; ++i) spawn.spiker(1900, -500)
             // for (let i = 0; i < 1; i++) spawn.snakeBoss(1900, -500)
             // for (let i = 0; i < 1; ++i) powerUps.directSpawn(m.pos.x + 50 * Math.random(), m.pos.y + 50 * Math.random(), "entanglement");
             // for (let i = 0; i < 2; ++i) powerUps.directSpawn(m.pos.x + 450, m.pos.y + 50 * Math.random(), "gun");
@@ -139,13 +132,18 @@ const level = {
         for (let i = 0; i < tech.wimpCount; i++) {
             spawn.WIMP()
             mob[mob.length - 1].isDecoupling = true //so you can find it to remove
-            for (let j = 0, len = 4; j < len; j++) powerUps.spawn(level.exit.x + 100 * (Math.random() - 0.5), level.exit.y - 100 + 100 * (Math.random() - 0.5), "research", false)
+            for (let j = 0, len = 5; j < len; j++) powerUps.spawn(level.exit.x + 100 * (Math.random() - 0.5), level.exit.y - 100 + 100 * (Math.random() - 0.5), "research", false)
         }
 
         if (m.plasmaBall) m.plasmaBall.fire()
         if (localSettings.entanglement && localSettings.entanglement.levelName === level.levels[level.onLevel]) {
             const flip = localSettings.entanglement.isHorizontalFlipped === simulation.isHorizontalFlipped ? 1 : -1
             powerUps.directSpawn(flip * localSettings.entanglement.position.x, localSettings.entanglement.position.y, "entanglement", false);
+        }
+        if (m.fieldMode === 8) {
+            Matter.Body.setPosition(m.fieldUpgrades[8].collider, m.pos);
+            m.fieldPosition = { x: m.pos.x, y: m.pos.y }
+            m.lastFieldPosition = { x: m.pos.x, y: m.pos.y }
         }
         level.newLevelOrPhase()
         if (simulation.isTraining) {
@@ -3555,6 +3553,7 @@ const level = {
         stationList.unshift(0) //add index zero to the front of the array
 
         let isExitOpen = false
+        let isTechSpawned = false
         let gatesOpenRight = -1
         let gatesOpenLeft = -1
         const infrastructure = (x, isInProgress = true) => {
@@ -3636,7 +3635,10 @@ const level = {
                     if (isExitOpen) {
                         level.exit.x = x - 50;
                         level.exit.y = -260;
-                        if (simulation.difficultyMode < 7) powerUps.spawn(level.exit.x, level.exit.y - 100, "tech");
+                        if (simulation.difficultyMode < 7 && !isTechSpawned) {
+                            isTechSpawned = true
+                            powerUps.spawn(level.exit.x, level.exit.y - 100, "tech");
+                        }
                     } else {
                         var gateButton = level.button(x - 62, -237, 125, false) //x, y, width = 126, isSpawnBase = true
                         gateButton.isUp = true
@@ -7772,6 +7774,7 @@ const level = {
     },
     gravitron() {
         mobs.maxMobBody = 25 //normally 40, but set lower to avoid too much clutter
+
         level.isVerticalFLipLevel = true
         simulation.fallHeight = 4000
         level.announceMobTypes()
@@ -7787,7 +7790,12 @@ const level = {
         powerUps.chooseRandomPowerUp(3900, 925);
 
         let buttons = []
-        level.isFlipped = false;
+        // level.isFlipped = false;
+        if (simulation.isInvertedVertical) {
+            level.isFlipped = true
+        } else {
+            level.isFlipped = false
+        }
         let isFlipping = false;
         const flipAnimationCycles = 60
 
@@ -38503,7 +38511,17 @@ const level = {
         spawn.mapRect(1725, -3150, 50, 175);
         spawn.mapRect(1725, -3150, 425, 50);
 
-        spawn.nodeGroup(1200, -1500, "grenadier", 7);
+        spawn.nodeGroup(1200, -1500, "grenadier", 7, 35, 200);
+        //     nodeGroup(
+        //     x,
+        //     y,
+        //     spawn = "striker",
+        //     nodes = Math.min(2 + Math.ceil(Math.random() * (simulation.difficulty + 2)), 8),
+        //     //Math.ceil(Math.random() * 3) + Math.min(4,Math.ceil(simulation.difficulty/2)),
+        //     radius = Math.ceil(Math.random() * 10) + 18, // radius of each node mob
+        //     sideLength = Math.ceil(Math.random() * 100) + 70, // distance between each node mob
+        //     stiffness = Math.random() * 0.03 + 0.005
+        // )
     },
     harpoon() { //jump at the top of the elevator's path to go extra high
         level.setPosToSpawn(0, -50); //normal spawn
